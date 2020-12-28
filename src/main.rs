@@ -1,6 +1,10 @@
 #[macro_use]
 extern crate clap;
 
+mod constants;
+
+use crate::constants::*;
+
 use clap::{App, Arg};
 use claxon::FlacReader;
 use cursive::views::{Dialog, TextView};
@@ -37,13 +41,12 @@ fn main() -> Result<(), std::io::Error> {
     let source = Decoder::new(BufReader::new(file)).unwrap();
     let reader = FlacReader::open(name).unwrap();
 
-    let title = reader.get_tag("TITLE").next().unwrap();
-    let artist = reader.get_tag("ARTIST").next().unwrap();
-
-    siv.add_layer(Dialog::around(TextView::new(format!("Playing {} by {}", title, artist))));
+    let title = reader.get_tag(FLAC_TITLE_TAG).next().unwrap();
+    let artist = reader.get_tag(FLAC_ARTIST_TAG).next().unwrap();
 
     sink.append(source);
 
+    siv.add_layer(Dialog::around(TextView::new(format!("Playing {} by {}.", title, artist))));
     siv.add_global_callback('q', |s| s.quit());
     siv.run();
 
