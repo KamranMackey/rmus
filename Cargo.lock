@@ -1309,16 +1309,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cabe4fa914dec5870285fa7f71f602645da47c486e68486d2b4ceb4a343e90ac"
 
 [[package]]
-name = "rmus"
-version = "0.0.1-alpha"
-dependencies = [
- "clap",
- "claxon",
- "cursive",
- "rodio",
-]
-
-[[package]]
 name = "rodio"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1329,6 +1319,16 @@ dependencies = [
  "hound",
  "lewton",
  "minimp3",
+]
+
+[[package]]
+name = "rsmus"
+version = "0.0.1-alpha"
+dependencies = [
+ "clap",
+ "claxon",
+ "cursive",
+ "rodio",
 ]
 
 [[package]]
