@@ -25,26 +25,25 @@ fn main() -> Result<(), std::io::Error> {
         .arg(Arg::with_name("file").help("The input file to play.").required(true).index(1))
         .get_matches();
 
-    let mut siv = cursive::default();
-
-    let name = matches.value_of("file").unwrap();
-    let file = File::open(name).unwrap();
-    let file_ext = get_file_extension(name).unwrap();
+    let filename = matches.value_of("file").unwrap();
+    let file_ext = get_file_extension(filename).unwrap();
 
     if file_ext != "flac" {
         println!("You did not provide a valid FLAC file.");
         return Ok(());
     }
 
+    let mut siv = cursive::default();
+
     let (_s, handle) = OutputStream::try_default().unwrap();
     let sink = Sink::try_new(&handle).unwrap();
+    let file = File::open(filename).unwrap();
     let source = Decoder::new(BufReader::new(file)).unwrap();
-    let reader = FlacReader::open(name).unwrap();
+    sink.append(source);
 
+    let reader = FlacReader::open(filename).unwrap();
     let title = reader.get_tag(FLAC_TITLE_TAG).next().unwrap();
     let artist = reader.get_tag(FLAC_ARTIST_TAG).next().unwrap();
-
-    sink.append(source);
 
     siv.add_layer(Dialog::around(TextView::new(format!("Playing {} by {}.", title, artist))));
     siv.add_global_callback('q', |s| s.quit());
