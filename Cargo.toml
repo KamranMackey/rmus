@@ -7,4 +7,5 @@ edition             = "2018"
 [dependencies]
 clap                = "2.33.3"
 claxon              = "0.4.3"
+cursive             = { version = "0.15.0", default-features = false, features = ["crossterm-backend"] }
 rodio               = "0.13.0"

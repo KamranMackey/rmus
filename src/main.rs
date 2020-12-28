@@ -3,6 +3,7 @@ extern crate clap;
 
 use clap::{App, Arg};
 use claxon::FlacReader;
+use cursive::views::{Dialog, TextView};
 use rodio::{Decoder, OutputStream, Sink};
 use std::ffi::OsStr;
 use std::{fs::File, io::BufReader, path::Path};
@@ -19,6 +20,8 @@ fn main() -> Result<(), std::io::Error> {
         .version_message("Show the application's version.")
         .arg(Arg::with_name("file").help("The input file to play.").required(true).index(1))
         .get_matches();
+
+    let mut siv = cursive::default();
 
     let name = matches.value_of("file").unwrap();
     let file = File::open(name).unwrap();
@@ -37,9 +40,12 @@ fn main() -> Result<(), std::io::Error> {
     let title = reader.get_tag("TITLE").next().unwrap();
     let artist = reader.get_tag("ARTIST").next().unwrap();
 
-    println!("Playing {} by {}.", title, artist);
+    siv.add_layer(Dialog::around(TextView::new(format!("Playing {} by {}", title, artist))));
 
     sink.append(source);
 
-    loop {}
+    siv.add_global_callback('q', |s| s.quit());
+    siv.run();
+
+    Ok(())
 }
