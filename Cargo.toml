@@ -5,7 +5,8 @@ authors             = ["Kamran Mackey <kamranm1200@gmail.com>"]
 edition             = "2018"
 
 [dependencies]
+bindings            = { path = "bindings" }
 clap                = "2.33.3"
 claxon              = "0.4.3"
-cursive             = { version = "0.15.0", default-features = false, features = ["crossterm-backend"] }
-rodio               = "0.13.0"
+cursive             = { version = "0.16.3", default-features = false, features = ["crossterm-backend"] }
+rodio               = "0.14.0"
