@@ -46,15 +46,13 @@ fn main() -> Result<(), std::io::Error> {
     let input = matches.value_of("input").unwrap();
     if std::fs::metadata(input)?.is_dir() {
         let path = std::fs::read_dir(input).unwrap();
-        path.filter_map(Result::ok)
-            .filter_map(|d| d.path().to_str().and_then(|f| if !f.ends_with(".jpg") { Some(d) } else { None }))
-            .for_each(|f| {
-                let filepath = f.path();
-                let path = filepath.as_path().to_str().unwrap();
-                let file = File::open(path).unwrap();
-                let source = Decoder::new(BufReader::new(file)).unwrap();
-                player.sink.append(source);
-            });
+        path.filter_map(Result::ok).filter(|f| !f.path().to_str().unwrap().contains(".jpg")).for_each(|f| {
+            let filepath = f.path();
+            let path = filepath.as_path().to_str().unwrap();
+            let file = File::open(path).unwrap();
+            let source = Decoder::new(BufReader::new(file)).unwrap();
+            player.sink.append(source);
+        });
     } else {
         let file = File::open(input).unwrap();
         let source = Decoder::new(BufReader::new(file)).unwrap();
